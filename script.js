@@ -63,9 +63,22 @@ function handleRegister(e) {
     const phone = document.getElementById('regPhone').value;
     const password = document.getElementById('regPassword').value;
 
-    if (localStorage.getItem(email)) {
-        alert("هذا البريد الإلكتروني مسجل بالفعل، يرجى تسجيل الدخول.");
+    const nameParts = name.trim().split(/\s+/);
+    if (nameParts.length < 4) {
+        alert("يرجى إدخال الاسم رباعي للتمكن من التسجيل.");
         return;
+    }
+
+    const existingUserStr = localStorage.getItem(email);
+    if (existingUserStr) {
+        const existingUser = JSON.parse(existingUserStr);
+        if (existingUser.password === password) {
+            checkActivationAndShowPlatform(existingUser, email);
+            return;
+        } else {
+            alert("هذا الحساب مسجل بالفعل. يرجى إدخال كلمة السر الصحيحة الخاصة بك للوصول للحساب، أو التوجه لصفحة تسجيل الدخول.");
+            return;
+        }
     }
 
     const user = { name, phone, password, activated: false };
