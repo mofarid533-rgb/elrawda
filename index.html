@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="منصة الروضة التعليمية للأستاذ تامر حسن - منصة مجانية لتعلم اللغة العربية">
+    <title>الروضة التعليمية | أ. تامر حسن</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons (Phosphor Icons or FontAwesome) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Auth Screen -->
+    <div id="authScreen" class="auth-wrapper">
+        <div class="auth-container">
+            <div class="auth-header">
+                <div class="logo">
+                    <span class="logo-icon"><i class="ph ph-books"></i></span>
+                    <div class="logo-text">
+                        <h1>الروضة التعليمية</h1>
+                        <p>بإشراف الأستاذ / تامر حسن</p>
+                    </div>
+                </div>
+                <h2>أهلاً بك في منصتك التعليمية</h2>
+                <p>سجل دخولك الآن لتبدأ رحلة التفوق في اللغة العربية مجاناً</p>
+            </div>
+            
+            <div class="auth-tabs">
+                <button class="active" id="tabLogin" onclick="switchAuthTab('login')">تسجيل الدخول</button>
+                <button id="tabRegister" onclick="switchAuthTab('register')">إنشاء حساب جديد</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">البريد الإلكتروني</label>
+                    <div class="input-icon">
+                        <i class="ph ph-envelope-simple"></i>
+                        <input type="email" id="loginEmail" placeholder="example@gmail.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">كلمة المرور</label>
+                    <div class="input-icon">
+                        <i class="ph ph-lock-key"></i>
+                        <input type="password" id="loginPassword" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary"><span>دخول</span><i class="ph ph-arrow-left"></i></button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="regName">الاسم الرباعي</label>
+                    <div class="input-icon">
+                        <i class="ph ph-user"></i>
+                        <input type="text" id="regName" placeholder="أدخل اسمك كاملاً" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="regEmail">البريد الإلكتروني</label>
+                    <div class="input-icon">
+                        <i class="ph ph-envelope-simple"></i>
+                        <input type="email" id="regEmail" placeholder="example@gmail.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="regPhone">رقم الهاتف (للتواصل)</label>
+                    <div class="input-icon">
+                        <i class="ph ph-phone"></i>
+                        <input type="tel" id="regPhone" placeholder="01X XXXX XXXX" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="regPassword">كلمة المرور</label>
+                    <div class="input-icon">
+                        <i class="ph ph-lock-key"></i>
+                        <input type="password" id="regPassword" placeholder="••••••••" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary"><span>إنشاء حساب</span><i class="ph ph-user-plus"></i></button>
+            </form>
+        </div>
+        
+        <!-- Animated Background Elements -->
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+    </div>
+
+    <!-- Main Platform (Hidden until login) -->
+    <div id="mainPlatform" class="platform-wrapper hidden">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-logo">
+                <h1>الروضة<span>التعليمية</span></h1>
+                <p>أ. تامر حسن</p>
+            </div>
+            
+            <ul class="nav-links">
+                <li class="active" onclick="switchSection('dashboard', this)">
+                    <i class="ph ph-squares-four"></i>الرئيسية
+                </li>
+                <li onclick="switchSection('literature', this)">
+                    <i class="ph ph-book-open-text"></i>الأدب
+                </li>
+                <li onclick="switchSection('grammar', this)">
+                    <i class="ph ph-text-aa"></i>النحو
+                </li>
+                <li onclick="switchSection('exams', this)">
+                    <i class="ph ph-exam"></i>حل الامتحانات
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <a href="https://wa.me/201228314052" target="_blank" class="support-btn" title="تواصل مع الدعم الفني">
+                    <i class="ph ph-whatsapp-logo"></i>
+                    <span>الدعم الفني</span>
+                </a>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="ph ph-sign-out"></i>
+                    <span>تسجيل الخروج</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="topbar">
+                <div class="user-greeting">
+                    <h2>مرحباً يا <span id="userNameDisplay">طالب</span>! 👋</h2>
+                    <p>مستعد لتعلم المزيد اليوم؟</p>
+                </div>
+                <div class="user-profile">
+                    <div class="avatar"><i class="ph ph-user"></i></div>
+                </div>
+            </header>
+
+            <div class="content-sections">
+                <!-- Dashboard Section -->
+                <section id="s-dashboard" class="content-section active">
+                    <div class="welcome-banner">
+                        <div class="banner-content">
+                            <h3>الصف الثالث الثانوي - لغة عربية</h3>
+                            <p>أهلاً بك يا بطل الثانوية العامة! كافة شروحات ومراجعات منهج الصف الثالث الثانوي متوفرة هنا ومجاناً بالكامل.</p>
+                            <button class="btn-secondary" onclick="switchSection('grammar', document.querySelectorAll('.nav-links li')[2])">ابدأ المذاكرة <i class="ph ph-arrow-left"></i></button>
+                        </div>
+                        <div class="banner-illustration">
+                            <i class="ph ph-student"></i>
+                        </div>
+                    </div>
+
+                    <h3 class="section-title">أقسام منهج الثانوية العامة المتاحة</h3>
+                    <div class="cards-grid">
+                        <div class="card" onclick="switchSection('literature', document.querySelectorAll('.nav-links li')[1])">
+                            <div class="card-icon"><i class="ph ph-book-open-text"></i></div>
+                            <h4>قسم الأدب</h4>
+                            <p>شرح وافٍ لجميع العصور الأدبية والمدارس الشعرية.</p>
+                        </div>
+                        <div class="card" onclick="switchSection('grammar', document.querySelectorAll('.nav-links li')[2])">
+                            <div class="card-icon"><i class="ph ph-text-aa"></i></div>
+                            <h4>قسم النحو</h4>
+                            <p>تأسيس قوي ومراجعات شاملة لجميع القواعد النحوية.</p>
+                        </div>
+                        <div class="card" onclick="switchSection('exams', document.querySelectorAll('.nav-links li')[3])">
+                            <div class="card-icon"><i class="ph ph-exam"></i></div>
+                            <h4>حل الامتحانات</h4>
+                            <p>تطبيقات عملية وحل لنماذج الامتحانات السابقة.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Literature Section -->
+                <section id="s-literature" class="content-section">
+                    <h3 class="section-title">الأدب - الصف الثالث الثانوي</h3>
+                    <div class="video-grid">
+                        
+                        <!-- المراجعات التأسيسية والعصور -->
+                        <div class="video-card">
+                            <div class="video-thumbnail custom-icon-bg" onclick="playVideo(this, 'jv7B_7_kAzY')" style="background: black; position: relative;">
+                                <!-- Simulated Icon from your upload -->
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                                    <h2 style="color: white; font-weight: 900; font-size: 2.2rem; transform: scaleX(1.1); letter-spacing: 2px;">عصر صدر الأسلام</h2>
+                                </div>
+                                <i class="ph ph-play-circle play-overlay" style="position: relative; z-index: 10; cursor: pointer; color: white; opacity: 0.8; font-size: 4rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,1)); transition: 0.3s; margin: auto;"></i>
+                            </div>
+                            <div class="video-info">
+                                <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5;">مراجعة وعصور سابقة</span>
+                                <h5>سمات الأدب في عصر صدر الإسلام</h5>
+                                <p>مراجعة وتأسيس لعصور الأدب السابقة (عصر صدر الإسلام).</p>
+                            </div>
+                        </div>
+                        
+                        <div class="video-card">
+                            <div class="video-thumbnail custom-icon-bg" onclick="playVideo(this, 'iZhyvKFDhbs')" style="background: black; position: relative;">
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                                    <h2 style="color: white; font-weight: 900; font-size: 2.2rem; transform: scaleX(1.1); letter-spacing: 1px; font-family: 'Cairo', sans-serif; text-align: center; line-height: 1.3;">الغزل في العصر<br>الأموي</h2>
+                                </div>
+                                <i class="ph ph-play-circle play-overlay" style="position: relative; z-index: 10; cursor: pointer; color: white; opacity: 0.8; font-size: 4rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,1)); transition: 0.3s; margin: auto;"></i>
+                            </div>
+                            <div class="video-info">
+                                <span class="badge" style="background: rgba(239, 68, 68, 0.2); color: #fca5a5;">مراجعة وعصور سابقة</span>
+                                <h5>الغزل في العصر الأموي</h5>
+                                <p>مراجعة وتأسيس لعصور الأدب السابقة (العصر الأموي).</p>
+                            </div>
+                        </div>
+
+                        <!-- المدارس الشعرية -->
+                        <div class="video-card">
+                            <div class="video-thumbnail custom-icon-bg" onclick="playVideo(this, 'Fsm5GHVgLzw')" style="background: black; position: relative;">
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                                    <h2 style="color: white; font-weight: 900; font-size: 2.5rem; letter-spacing: 1px; font-family: 'Cairo', sans-serif;">الاحياء والبعث</h2>
+                                </div>
+                                <i class="ph ph-play-circle play-overlay" style="position: relative; z-index: 10; cursor: pointer; color: white; opacity: 0.8; font-size: 4rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,1)); transition: 0.3s; margin: auto;"></i>
+                            </div>
+                            <div class="video-info">
+                                <span class="badge">المدارس الشعرية</span>
+                                <h5>مدرسة الإحياء والبعث وجيل التطوير</h5>
+                                <p>شرح المدرسة وأهم سماتها والتطبيقات عليها.</p>
+                            </div>
+                        </div>
+
+
+
+                        <!-- الفنون النثرية -->
+
+
+                    </div>
+                </section>
+
+                <!-- Grammar Section -->
+                <section id="s-grammar" class="content-section">
+                    <h3 class="section-title">النحو - الصف الثالث الثانوي</h3>
+                    <div class="video-grid">
+                        
+                        <div class="video-card">
+                            <div class="video-thumbnail custom-icon-bg" onclick="playVideo(this, 'LlVl3N_WukA')" style="background: black; position: relative;">
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                                    <h2 style="color: white; font-weight: 900; font-size: 2.5rem; letter-spacing: 1px; font-family: 'Cairo', sans-serif;">المصدر الصناعي</h2>
+                                </div>
+                                <i class="ph ph-play-circle play-overlay" style="position: relative; z-index: 10; cursor: pointer; color: white; opacity: 0.8; font-size: 4rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,1)); transition: 0.3s; margin: auto;"></i>
+                            </div>
+                            <div class="video-info">
+                                <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c4b5fd;">درس جديد</span>
+                                <h5>المصدر الصناعي</h5>
+                                <p>شرح درس المصدر الصناعي وكيفية صياغته واستخراجه.</p>
+                            </div>
+                        </div>
+
+                        <div class="video-card">
+                            <div class="video-thumbnail custom-icon-bg" onclick="playVideo(this, 'Rl5aY5L7Uq4')" style="background: black; position: relative;">
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                                    <h2 style="color: white; font-weight: 900; font-size: 2.5rem; letter-spacing: 1px; font-family: 'Cairo', sans-serif;">صيغ المبالغة</h2>
+                                </div>
+                                <i class="ph ph-play-circle play-overlay" style="position: relative; z-index: 10; cursor: pointer; color: white; opacity: 0.8; font-size: 4rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,1)); transition: 0.3s; margin: auto;"></i>
+                            </div>
+                            <div class="video-info">
+                                <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c4b5fd;">المشتقات</span>
+                                <h5>صيغ المبالغة وإعمالها</h5>
+                                <p>شرح مبسط لدرس صيغ المبالغة وأوزانها وشروط إعمالها.</p>
+                            </div>
+                        </div>
+
+                        <div class="video-card">
+                            <div class="video-thumbnail custom-icon-bg" onclick="playVideo(this, 'Mw1HjmMGeuo')" style="background: black; position: relative;">
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                                    <h2 style="color: white; font-weight: 900; font-size: 2.3rem; letter-spacing: 1px; font-family: 'Cairo', sans-serif;">الممنوع من الصرف</h2>
+                                </div>
+                                <i class="ph ph-play-circle play-overlay" style="position: relative; z-index: 10; cursor: pointer; color: white; opacity: 0.8; font-size: 4rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,1)); transition: 0.3s; margin: auto;"></i>
+                            </div>
+                            <div class="video-info">
+                                <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c4b5fd;">الوحدة السابعة</span>
+                                <h5>الممنوع من الصرف (الجزء الأول)</h5>
+                                <p>شرح مبسط لقواعد الممنوع من الصرف وعلل منعه.</p>
+                            </div>
+                        </div>
+
+                        <div class="video-card">
+                            <div class="video-thumbnail custom-icon-bg" onclick="playVideo(this, '83RFbF2PQQ4')" style="background: black; position: relative;">
+                                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                                    <h2 style="color: white; font-weight: 900; font-size: 2.3rem; letter-spacing: 1px; font-family: 'Cairo', sans-serif;">الممنوع من الصرف 2</h2>
+                                </div>
+                                <i class="ph ph-play-circle play-overlay" style="position: relative; z-index: 10; cursor: pointer; color: white; opacity: 0.8; font-size: 4rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,1)); transition: 0.3s; margin: auto;"></i>
+                            </div>
+                            <div class="video-info">
+                                <span class="badge" style="background: rgba(139, 92, 246, 0.2); color: #c4b5fd;">الوحدة السابعة</span>
+                                <h5>الممنوع من الصرف (الجزء الثاني)</h5>
+                                <p>استكمال شرح قواعد الممنوع من الصرف وتطبيقات عليه.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Exams Section -->
+                <section id="s-exams" class="content-section">
+                    <h3 class="section-title">حل امتحانات الثانوية العامة</h3>
+                    <div class="video-grid">
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Hidden Form submitting to static Email handler if needed -->
+    <!-- Formspree or EmailJS can be hooked here -->
+    
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
